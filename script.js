@@ -2,6 +2,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
   width = 960 - margin.left - margin.right,
   height = 500 - margin.top - margin.bottom;
 
+// initialize scales
 var x0 = d3.scale.ordinal()
   .rangeRoundBands([0, width], .1);
 
@@ -13,6 +14,7 @@ var y = d3.scale.linear()
 var color = d3.scale.ordinal()
   .range(["#98abc5", "#8a89a6"]);
 
+// initialize axis
 var xAxis = d3.svg.axis()
   .scale(x0)
   .orient("bottom");
@@ -20,14 +22,19 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
   .scale(y)
   .orient("left")
-  .tickFormat(d3.format(".2s"));
+  .tickFormat(d3.format(".2s"), "%");
 
-var svg = d3.select("body").append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
-.append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+// initialize svg, making it responsive with svg viewbox to preserve aspect ratio
+var svg = d3.select("#chart").append("svg")
+  .attr("width", '100%')
+  .attr("height", '100%')
+  .attr("viewBox", '0 0 960 500')
+  .attr('preserveAspectRatio','xMinYMin')
+  .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+// load data from csv
 d3.csv("to_chart.csv", function(error, data) {
   if (error) throw error;
 
@@ -54,7 +61,7 @@ d3.csv("to_chart.csv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Percent Profitable");
+      .text("% Profitable IPOs");
 
   var years = svg.selectAll(".years")
       .data(data)
@@ -71,6 +78,7 @@ d3.csv("to_chart.csv", function(error, data) {
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) { return color(d.name); });
 
+  // initialize annotations to display each value above the bar
   years.selectAll("text")
       .data(function(d) { return d.profits; })
     .enter()
@@ -87,6 +95,7 @@ d3.csv("to_chart.csv", function(error, data) {
         return d3.format(".3g")(d.value);
       });
 
+  // initialize legend
   var legend = svg.selectAll(".legend")
       .data(percentProfits.slice().reverse())
     .enter().append("g")
