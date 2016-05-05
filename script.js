@@ -71,6 +71,22 @@ d3.csv("to_chart.csv", function(error, data) {
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) { return color(d.name); });
 
+  years.selectAll("text")
+      .data(function(d) { return d.profits; })
+    .enter()
+      .append("text")
+      .attr("width", x1.rangeBand())
+      .attr("x", function(d) { 
+        console.log(this.getBBox().width);
+        return x1(d.name) + (x1.rangeBand() / 2); 
+      })
+      .attr("text-anchor", "middle")
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); })
+      .text(function(d) {
+        return d3.format(".3g")(d.value);
+      });
+
   var legend = svg.selectAll(".legend")
       .data(percentProfits.slice().reverse())
     .enter().append("g")
