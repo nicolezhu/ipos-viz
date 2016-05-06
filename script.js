@@ -12,7 +12,7 @@ var y = d3.scale.linear()
   .range([height, 0]);
 
 var color = d3.scale.ordinal()
-  .range(["#98abc5", "#8a89a6"]);
+  .range(["#d5564a", "#0d91e5"]);
 
 // initialize axis
 var xAxis = d3.svg.axis()
@@ -22,7 +22,15 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
   .scale(y)
   .orient("left")
-  .tickFormat(d3.format(".2s"), "%");
+  .ticks(9, "%")
+  .tickFormat(d3.format(".s%"), "*");
+
+function make_y_axis() {        
+  return d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(5)
+}
 
 // initialize svg, making it responsive with svg viewbox to preserve aspect ratio
 var svg = d3.select("#chart").append("svg")
@@ -32,7 +40,7 @@ var svg = d3.select("#chart").append("svg")
   .attr('preserveAspectRatio','xMinYMin')
   .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")")
   .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // load data from csv
 d3.csv("to_chart.csv", function(error, data) {
@@ -49,34 +57,45 @@ d3.csv("to_chart.csv", function(error, data) {
   y.domain([0, d3.max(data, function(d) { return d3.max(d.profits, function(d) { return d.value; }); })]);
 
   svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
 
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
     .append("text")
       .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
+      .attr("y", 0 - margin.left - 4)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
       .text("% Profitable IPOs");
 
+  // add grid lines
+  svg.append("g")         
+    .attr("class", "grid")
+    .call(make_y_axis()
+      .tickSize(-width, 0, 0)
+      .tickFormat("")
+    )
+
+  // add bars
   var years = svg.selectAll(".years")
       .data(data)
     .enter().append("g")
-      .attr("class", "years")
       .attr("transform", function(d) { return "translate(" + x0(d.year_range) + ",0)"; });
 
   years.selectAll("rect")
       .data(function(d) { return d.profits; })
     .enter().append("rect")
+      .attr("class", function(d) { 
+        return (d.name == "percent_prof_tech") ? "tech" : "other";
+      })
       .attr("width", x1.rangeBand())
       .attr("x", function(d) { return x1(d.name); })
       .attr("y", function(d) { return y(d.value); })
-      .attr("height", function(d) { return height - y(d.value); })
-      .style("fill", function(d) { return color(d.name); });
+      .attr("height", function(d) { return height - y(d.value); });
 
   // initialize annotations to display each value above the bar
   years.selectAll("text")
@@ -85,14 +104,13 @@ d3.csv("to_chart.csv", function(error, data) {
       .append("text")
       .attr("width", x1.rangeBand())
       .attr("x", function(d) { 
-        console.log(this.getBBox().width);
         return x1(d.name) + (x1.rangeBand() / 2); 
       })
       .attr("text-anchor", "middle")
-      .attr("y", function(d) { return y(d.value); })
+      .attr("y", function(d) { return y(d.value) - 5; })
       .attr("height", function(d) { return height - y(d.value); })
       .text(function(d) {
-        return d3.format(".3g")(d.value);
+        return d3.format(".3g")(d.value) + "%";
       });
 
   // initialize legend

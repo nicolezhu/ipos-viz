@@ -6,12 +6,29 @@ html,body {
 }
 
 body {
-    font-family: sans-serif;
+    font-family: 'PT Sans', sans-serif;
+    font-size: 0.85rem;
 }
 
 svg {
     width: 100%;
     height: 100%;
+}
+
+.tech {
+    fill: #d5564a;
+}
+
+.tech:hover {
+    fill: #df7d73;
+}
+
+.other {
+    fill: #0d91e5;
+}
+
+.other:hover {
+    fill: #62bcf6;
 }
 
 .axis path,
@@ -21,8 +38,12 @@ svg {
   shape-rendering: crispEdges;
 }
 
-.bar {
-  fill: steelblue;
+.grid .tick {
+    stroke: #d3d3d3;
+    opacity: 0.7;
+}
+.grid path {
+      stroke-width: 0;
 }
 
 .article {
@@ -36,6 +57,49 @@ h1 {
     letter-spacing: 1px;
     margin-top: 15px;
     margin-bottom: 0px;
-    line-height: 1;
+}
+
+h4 {
+    color: #888;
+    font-size: 1rem;
+    font-weight: 300;
     text-align: center;
+    margin-top: 5px;
+}
+
+figcaption {
+    text-align: right;
+    font-size: 0.56rem;
+    color: #777;
+    margin-bottom: 2em;
+}
+
+.card {
+    width: 80%;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    margin-bottom: 2em;
+}
+
+.cardHeader {
+    font-weight: 600;
+    line-height: 1.1;
+    color: #333;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    -ms-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+    background: #5b8ad8;
+    color: white;
+    padding: 15px 20px;
+}
+
+.cardContent {
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    -ms-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px;
+    border: 1px solid #5b8ad8;
+    border-width: 0 1px 1px 1px;
+    padding: 15px 20px;
 }
