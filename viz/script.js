@@ -43,7 +43,7 @@ var svg = d3.select("#chart").append("svg")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // load data from csv
-d3.csv("to_chart.csv", function(error, data) {
+d3.csv("/data/to_chart.csv", function(error, data) {
   if (error) throw error;
 
   var percentProfits = d3.keys(data[0]).filter(function(key) { return key !== "year_range"; });

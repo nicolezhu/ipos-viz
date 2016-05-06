@@ -24,8 +24,8 @@ jupyter notebook "IPOs.ipynb"
 
 ## Viewing the visualization
 
-To see the visualization, change directories into /viz and start a simple HTTP server from the command line:
+To see the visualization, start a simple HTTP server from the command line:
 
 `python -m SimpleHTTPServer`
 
-Navigate to `localhost:8000`
+Navigate to `localhost:8000/viz`
